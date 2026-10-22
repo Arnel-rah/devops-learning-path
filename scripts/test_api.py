@@ -2,20 +2,27 @@ import requests
 import urllib3
 from urllib3.util import connection
 
-TARGET_IP = "104.21.52.197"
+
+
+TARGET_IP = input("Enter your IP adress : ") 
 _orig_create_connection = connection.create_connection
+
+URL = input("Enter your URL : ").lower()
+
 
 def patched_create_connection(address, *args, **kwargs):
     host, port = address
-    if host == "sadiarnel.me":
+    if host == URL:
         return _orig_create_connection((TARGET_IP, port), *args, **kwargs)
     return _orig_create_connection(address, *args, **kwargs)
 
 connection.create_connection = patched_create_connection
 
-URL = "https://sadiarnel.me"
+
 
 print(f"Tentative de connexion à {URL} (forcée sur l'IP {TARGET_IP})...")
+
+
 
 try:
     response = requests.get(URL, timeout=3)
